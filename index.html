@@ -3,662 +3,749 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Repair Challenge</title>
+    <title>1-Minute Prompt Challenge</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .min-h-screen { min-height: 100vh; }
+        .bg-gradient { background: linear-gradient(135deg, #581c87 0%, #312e81 50%, #1e3a8a 100%); }
+        .bg-white { background: white; }
+        .bg-gray-50 { background: #f9fafb; }
+        .bg-purple-50 { background: #faf5ff; }
+        .bg-purple-100 { background: #f3e8ff; }
+        .bg-purple-600 { background: #9333ea; }
+        .bg-purple-700 { background: #7c22ce; }
+        .bg-green-100 { background: #dcfce7; }
+        .bg-green-500 { background: #22c55e; }
+        .bg-green-600 { background: #16a34a; }
+        .bg-green-700 { background: #15803d; }
+        .bg-red-50 { background: #fef2f2; }
+        .bg-red-100 { background: #fee2e2; }
+        .bg-orange-50 { background: #fff7ed; }
+        .bg-blue-50 { background: #eff6ff; }
+        .bg-gray-400 { background: #9ca3af; }
+        .bg-gradient-purple { background: linear-gradient(90deg, #9333ea, #ec4899); }
+        .bg-gradient-green { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .text-white { color: white; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-600 { color: #4b5563; }
+        .text-gray-700 { color: #374151; }
+        .text-gray-800 { color: #1f2937; }
+        .text-purple-600 { color: #9333ea; }
+        .text-purple-700 { color: #7c22ce; }
+        .text-purple-800 { color: #6b21a8; }
+        .text-green-500 { color: #22c55e; }
+        .text-green-600 { color: #16a34a; }
+        .text-green-700 { color: #15803d; }
+        .text-yellow-500 { color: #eab308; }
+        .text-yellow-600 { color: #ca8a04; }
+        .text-red-500 { color: #ef4444; }
+        .text-red-600 { color: #dc2626; }
+        .text-red-700 { color: #b91c1c; }
+        .text-orange-700 { color: #c2410c; }
+        .text-blue-600 { color: #2563eb; }
+        .text-blue-700 { color: #1d4ed8; }
+        .text-blue-800 { color: #1e40af; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .flex-1 { flex: 1; }
+        .w-full { width: 100%; }
+        .w-6 { width: 1.5rem; }
+        .h-6 { height: 1.5rem; }
+        .h-32 { height: 8rem; }
+        .max-w-md { max-width: 28rem; }
+        .max-w-lg { max-width: 32rem; }
+        .max-w-4xl { max-width: 56rem; }
+        .max-h-64 { max-height: 16rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+        .pt-2 { padding-top: 0.5rem; }
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .rounded-full { border-radius: 9999px; }
+        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .border-2 { border-width: 2px; }
+        .border { border-width: 1px; }
+        .border-t-2 { border-top-width: 2px; }
+        .border-l-4 { border-left-width: 4px; }
+        .border-purple-200 { border-color: #e9d5ff; }
+        .border-purple-500 { border-color: #a855f7; }
+        .border-red-400 { border-color: #f87171; }
+        .border-red-500 { border-color: #ef4444; }
+        .border-orange-500 { border-color: #f97316; }
+        .border-green-500 { border-color: #22c55e; }
+        .border-blue-500 { border-color: #3b82f6; }
+        .border-gray-300 { border-color: #d1d5db; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-5xl { font-size: 3rem; }
+        .text-6xl { font-size: 3.75rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .font-mono { font-family: ui-monospace, monospace; }
+        .italic { font-style: italic; }
+        .overflow-y-auto { overflow-y: auto; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
+        .resize-none { resize: none; }
+        .cursor-pointer { cursor: pointer; }
+        .transition { transition: all 0.2s; }
+        .hover-opacity:hover { opacity: 0.9; }
+        .hover-bg-purple:hover { background: #7c22ce; }
+        .hover-bg-green:hover { background: #15803d; }
+        .hover-bg-purple-200:hover { background: #e9d5ff; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        input, textarea {
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+        .btn-secondary {
+            background: #9333ea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #7c22ce;
+        }
+        .btn-green {
+            background: #16a34a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-green:hover:not(:disabled) {
+            background: #15803d;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        // ⚠️ REPLACE THIS WITH YOUR ANTHROPIC API KEY
-        const ANTHROPIC_API_KEY = '';
-        
-        const { useState, useEffect } = React;
-        
-        // Lucide React icons as inline SVGs
-        const Clock = ({ className }) => (
-            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-        );
-        
-        const Award = ({ className }) => (
-            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="8" r="7"></circle>
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-            </svg>
-        );
-        
-        const RefreshCw = ({ className }) => (
-            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <polyline points="1 20 1 14 7 14"></polyline>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-            </svg>
-        );
-        
-        const Languages = ({ className }) => (
-            <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="m5 8 6 6"></path>
-                <path d="m4 14 6-6 2-3"></path>
-                <path d="M2 5h12"></path>
-                <path d="M7 2h1"></path>
-                <path d="m22 22-5-10-5 10"></path>
-                <path d="M14 18h6"></path>
-            </svg>
-        );
+        // ============================================================
+        // ⚠️ PASTE YOUR ANTHROPIC API KEY BELOW ⚠️
+        // Get your key from: https://console.anthropic.com/settings/keys
+        // ============================================================
+        const ANTHROPIC_API_KEY = 'YOUR-API-KEY-HERE';
+        // ============================================================
 
-        const PromptRepairGame = () => {
+        const { useState, useEffect, useRef } = React;
+
+        const TeamPromptChallenge = () => {
             const [language, setLanguage] = useState('en');
-            const [currentChallenge, setCurrentChallenge] = useState(0);
+            const [teamName, setTeamName] = useState('');
+            const [playerName, setPlayerName] = useState('');
             const [userPrompt, setUserPrompt] = useState('');
             const [aiResponse, setAiResponse] = useState('');
             const [isLoading, setIsLoading] = useState(false);
             const [timeLeft, setTimeLeft] = useState(60);
-            const [gameState, setGameState] = useState('instructions');
-            const [score, setScore] = useState(0);
+            const [gameState, setGameState] = useState('setup');
             const [attempts, setAttempts] = useState(0);
             const [showHint, setShowHint] = useState(false);
-            const [showInstructionsModal, setShowInstructionsModal] = useState(false);
+            const [finalScore, setFinalScore] = useState(0);
+            const [scoreBreakdown, setScoreBreakdown] = useState(null);
+            const [error, setError] = useState('');
+            const [hasSucceeded, setHasSucceeded] = useState(false);
+            const timerRef = useRef(null);
 
-            const challenges = {
-                en: [
-                    {
-                        badPrompt: "Tell me about dogs",
-                        poorResult: "Dogs are mammals that bark and are kept as pets. They come in many breeds.",
-                        goal: "Get a comparison of 3 dog breeds suitable for apartment living, with pros and cons for each",
-                        targetKeywords: ["breed", "apartment", "pros", "cons", "comparison"],
-                        hint: "Be specific about what you want compared, the context (apartment living), and the format (pros/cons)"
-                    },
-                    {
-                        badPrompt: "Write something about climate",
-                        poorResult: "Climate refers to long-term weather patterns in a region.",
-                        goal: "Get a 100-word explanation of climate change for a 10-year-old, using a simple analogy",
-                        targetKeywords: ["climate change", "10-year-old", "simple", "analogy", "explain"],
-                        hint: "Specify the audience age, desired length, and request an analogy to make it relatable"
-                    },
-                    {
-                        badPrompt: "Help with Python",
-                        poorResult: "Python is a programming language. What do you need help with?",
-                        goal: "Get a working Python function that removes duplicates from a list, with code comments explaining each step",
-                        targetKeywords: ["function", "remove duplicates", "list", "comments", "code"],
-                        hint: "Describe the exact task (function to remove duplicates), input/output, and ask for commented code"
-                    },
-                    {
-                        badPrompt: "Give me a recipe",
-                        poorResult: "Here's a recipe for chocolate chip cookies: Mix flour, sugar, butter, eggs, and chocolate chips. Bake at 350°F.",
-                        goal: "Get a detailed recipe for vegetarian pasta that takes under 30 minutes, serves 4, and includes nutritional information",
-                        targetKeywords: ["vegetarian", "pasta", "30 minutes", "serves 4", "nutritional"],
-                        hint: "Specify dietary restrictions, dish type, time constraint, servings, and additional information needed"
-                    },
-                    {
-                        badPrompt: "Explain AI",
-                        poorResult: "AI stands for Artificial Intelligence. It's when computers can think.",
-                        goal: "Get a 3-paragraph explanation of how neural networks work, using the analogy of how the human brain learns",
-                        targetKeywords: ["neural network", "paragraph", "analogy", "brain", "learn"],
-                        hint: "Specify the AI concept (neural networks), structure (3 paragraphs), and request a brain-learning analogy"
-                    }
-                ],
-                fr: [
-                    {
-                        badPrompt: "Parle-moi des chiens",
-                        poorResult: "Les chiens sont des mammifères qui aboient et sont gardés comme animaux de compagnie. Il existe de nombreuses races.",
-                        goal: "Obtenir une comparaison de 3 races de chiens adaptées à la vie en appartement, avec avantages et inconvénients pour chacune",
-                        targetKeywords: ["race", "appartement", "avantages", "inconvénients", "comparaison"],
-                        hint: "Soyez précis sur ce que vous voulez comparer, le contexte (vie en appartement) et le format (avantages/inconvénients)"
-                    },
-                    {
-                        badPrompt: "Écris quelque chose sur le climat",
-                        poorResult: "Le climat fait référence aux conditions météorologiques à long terme dans une région.",
-                        goal: "Obtenir une explication de 100 mots sur le changement climatique pour un enfant de 10 ans, en utilisant une analogie simple",
-                        targetKeywords: ["changement climatique", "10 ans", "simple", "analogie", "expliquer"],
-                        hint: "Précisez l'âge du public, la longueur souhaitée et demandez une analogie pour la rendre accessible"
-                    },
-                    {
-                        badPrompt: "Aide avec Python",
-                        poorResult: "Python est un langage de programmation. De quoi avez-vous besoin?",
-                        goal: "Obtenir une fonction Python fonctionnelle qui supprime les doublons d'une liste, avec des commentaires expliquant chaque étape",
-                        targetKeywords: ["fonction", "supprimer doublons", "liste", "commentaires", "code"],
-                        hint: "Décrivez la tâche exacte (fonction pour supprimer les doublons), entrée/sortie, et demandez du code commenté"
-                    },
-                    {
-                        badPrompt: "Donne-moi une recette",
-                        poorResult: "Voici une recette de cookies: Mélangez farine, sucre, beurre, œufs et pépites de chocolat. Cuire à 180°C.",
-                        goal: "Obtenir une recette détaillée de pâtes végétariennes en moins de 30 minutes, pour 4 personnes, avec informations nutritionnelles",
-                        targetKeywords: ["végétarien", "pâtes", "30 minutes", "4 personnes", "nutritionnel"],
-                        hint: "Précisez les restrictions alimentaires, le type de plat, la contrainte de temps, le nombre de portions et les informations supplémentaires"
-                    },
-                    {
-                        badPrompt: "Explique l'IA",
-                        poorResult: "IA signifie Intelligence Artificielle. C'est quand les ordinateurs peuvent penser.",
-                        goal: "Obtenir une explication en 3 paragraphes du fonctionnement des réseaux neuronaux, en utilisant l'analogie de l'apprentissage du cerveau humain",
-                        targetKeywords: ["réseau neuronal", "paragraphe", "analogie", "cerveau", "apprentissage"],
-                        hint: "Précisez le concept d'IA (réseaux neuronaux), la structure (3 paragraphes) et demandez une analogie avec l'apprentissage du cerveau"
-                    }
-                ]
-            };
-
-            const translations = {
+            const challenge = {
                 en: {
-                    title: "Prompt Repair Challenge",
-                    subtitle: "Master the art of prompt engineering in 60 seconds!",
-                    howToPlay: "How to Play",
-                    instructions: [
-                        "You'll see a BAD PROMPT that produces a poor result from AI",
-                        "Your GOAL is described - what you actually want the AI to produce",
-                        "REWRITE the prompt to be clear, specific, and effective",
-                        "Click 'Test My Prompt' to see if Claude gives you the desired result",
-                        "You have 60 seconds per challenge. Fewer attempts = higher score!"
-                    ],
-                    whatYouLearn: "What You'll Learn:",
-                    learningPoints: [
-                        "How to be specific and clear in your requests",
-                        "Adding context and constraints to prompts",
-                        "Specifying output format and structure",
-                        "Targeting appropriate audience levels"
-                    ],
-                    warningTitle: "⚠️ Important Rule:",
-                    warningText: "DO NOT copy-paste the goal! You must write an actual prompt (a request/instruction to Claude). Copying the goal will result in a 5-point penalty.",
-                    startGame: "Start Game",
-                    backToGame: "Back to Game",
-                    badPromptLabel: "❌ Bad Prompt:",
-                    poorResultLabel: "📉 Poor Result:",
-                    yourGoalLabel: "🎯 Your Goal:",
-                    yourPromptLabel: "Your Improved Prompt:",
-                    promptPlaceholder: "Write your improved prompt here...",
-                    submitButton: "Test My Prompt",
-                    testing: "Testing...",
-                    hintButton: "💡 Need a Hint?",
-                    hint: "Hint:",
-                    timeRemaining: "Time Remaining:",
-                    challenge: "Challenge",
-                    of: "of",
-                    score: "Score:",
-                    attempts: "Attempts:",
-                    success: "🎉 Success!",
-                    successMessage: "Great prompt engineering! Your prompt successfully achieved the goal.",
-                    nextChallenge: "Next Challenge",
-                    timeUp: "⏰ Time's Up!",
-                    timeUpMessage: "Don't worry! Prompt engineering takes practice.",
-                    tryAgain: "Try Again",
-                    finalScore: "Final Score",
-                    restart: "Restart Game",
-                    aiResponse: "🤖 Claude's Response:",
-                    showInstructions: "📖 Instructions",
-                    penaltyWarning: "⚠️ COPY-PASTE DETECTED! -5 points penalty. Write an actual prompt like 'Can you...' or 'Please create...'"
+                    badPrompt: "Tell me about dogs",
+                    poorResult: "Dogs are mammals that bark and are kept as pets. They come in many breeds.",
+                    goal: "Get a comparison of 3 dog breeds suitable for apartment living, with pros and cons for each",
+                    targetKeywords: ["breed", "apartment", "pros", "cons", "comparison", "living"],
+                    hint: "Be specific about: (1) what you want compared, (2) the context (apartment living), (3) the format (pros/cons), (4) how many breeds"
                 },
                 fr: {
-                    title: "Défi de Réparation de Prompt",
-                    subtitle: "Maîtrisez l'art de l'ingénierie de prompts en 60 secondes!",
-                    howToPlay: "Comment Jouer",
-                    instructions: [
-                        "Vous verrez un MAUVAIS PROMPT qui produit un résultat médiocre de l'IA",
-                        "Votre OBJECTIF est décrit - ce que vous voulez réellement que l'IA produise",
-                        "RÉÉCRIVEZ le prompt pour qu'il soit clair, précis et efficace",
-                        "Cliquez sur 'Tester Mon Prompt' pour voir si Claude donne le résultat souhaité",
-                        "Vous avez 60 secondes par défi. Moins de tentatives = score plus élevé!"
-                    ],
-                    whatYouLearn: "Ce Que Vous Apprendrez:",
-                    learningPoints: [
-                        "Comment être précis et clair dans vos demandes",
-                        "Ajouter du contexte et des contraintes aux prompts",
-                        "Spécifier le format et la structure de sortie",
-                        "Cibler les niveaux d'audience appropriés"
-                    ],
-                    warningTitle: "⚠️ Règle Importante:",
-                    warningText: "NE copiez-collez PAS l'objectif! Vous devez écrire un vrai prompt (une demande/instruction à Claude). Copier l'objectif entraînera une pénalité de 5 points.",
-                    startGame: "Commencer le Jeu",
-                    backToGame: "Retour au Jeu",
-                    badPromptLabel: "❌ Mauvais Prompt:",
-                    poorResultLabel: "📉 Résultat Médiocre:",
-                    yourGoalLabel: "🎯 Votre Objectif:",
-                    yourPromptLabel: "Votre Prompt Amélioré:",
-                    promptPlaceholder: "Écrivez votre prompt amélioré ici...",
-                    submitButton: "Tester Mon Prompt",
-                    testing: "Test en cours...",
-                    hintButton: "💡 Besoin d'un Indice?",
-                    hint: "Indice:",
-                    timeRemaining: "Temps Restant:",
-                    challenge: "Défi",
-                    of: "de",
-                    score: "Score:",
-                    attempts: "Tentatives:",
-                    success: "🎉 Réussite!",
-                    successMessage: "Excellente ingénierie de prompt! Votre prompt a atteint l'objectif avec succès.",
-                    nextChallenge: "Défi Suivant",
-                    timeUp: "⏰ Temps Écoulé!",
-                    timeUpMessage: "Ne vous inquiétez pas! L'ingénierie de prompts demande de la pratique.",
-                    tryAgain: "Réessayer",
-                    finalScore: "Score Final",
-                    restart: "Recommencer",
-                    aiResponse: "🤖 Réponse de Claude:",
-                    showInstructions: "📖 Instructions",
-                    penaltyWarning: "⚠️ COPIER-COLLER DÉTECTÉ! Pénalité de -5 points. Écrivez un vrai prompt comme 'Peux-tu...' ou 'Crée-moi...'"
+                    badPrompt: "Parle-moi des chiens",
+                    poorResult: "Les chiens sont des mammifères qui aboient et sont gardés comme animaux de compagnie. Il existe de nombreuses races.",
+                    goal: "Obtenir une comparaison de 3 races de chiens adaptées à la vie en appartement, avec avantages et inconvénients pour chacune",
+                    targetKeywords: ["race", "appartement", "avantage", "inconvénient", "comparaison", "vie"],
+                    hint: "Soyez précis sur: (1) ce que vous voulez comparer, (2) le contexte (vie en appartement), (3) le format (avantages/inconvénients), (4) combien de races"
                 }
             };
 
-            const t = translations[language];
-            const currentChallenges = challenges[language];
-            const challenge = currentChallenges[currentChallenge];
+            const t = {
+                en: {
+                    title: "1-Minute Prompt Challenge",
+                    subtitle: "Team Competition - Best Score Wins!",
+                    teamName: "Team Name",
+                    playerName: "Player Name",
+                    startGame: "Start Challenge",
+                    instructions: "Instructions",
+                    rule1: "You'll see a BAD prompt and its poor result",
+                    rule2: "Your goal: rewrite the prompt to get a SPECIFIC output",
+                    rule3: "You have 60 seconds and unlimited attempts",
+                    rule4: "Fewer attempts + faster time = higher score",
+                    rule5: "Don't copy the goal - write a real prompt!",
+                    ready: "Ready to Begin",
+                    badPrompt: "❌ Bad Prompt:",
+                    poorResult: "😕 Poor Result:",
+                    yourGoal: "🎯 Your Goal:",
+                    showHint: "Show Hint",
+                    hideHint: "Hide Hint",
+                    hint: "💡 Hint:",
+                    yourPrompt: "Your improved prompt:",
+                    submit: "Submit to Claude",
+                    submitting: "Claude is thinking...",
+                    finish: "Finish & Calculate Score",
+                    timeLeft: "Time",
+                    attempts: "Attempts",
+                    aiResponse: "Claude's Response:",
+                    keepTrying: "Keep improving! Try to match the goal better.",
+                    success: "✓ Looking good! You can finish or try for a better response.",
+                    antiCheat: "⚠️ Don't copy the goal - write a real prompt!",
+                    gameOver: "Challenge Complete!",
+                    team: "Team",
+                    player: "Player",
+                    scoreBreakdown: "Score Breakdown",
+                    basePoints: "Base Points",
+                    timeBonus: "Time Bonus",
+                    qualityBonus: "Quality Bonus",
+                    attemptPenalty: "Attempt Penalty",
+                    totalScore: "TOTAL SCORE",
+                    playAgain: "Play Again",
+                    submittedPrompt: "Your Winning Prompt:",
+                    enterBothNames: "Please enter both team and player names",
+                    connectionError: "Connection error. Please try again.",
+                    apiKeyMissing: "⚠️ API key not configured. Please add your Anthropic API key."
+                },
+                fr: {
+                    title: "Défi Prompt 1 Minute",
+                    subtitle: "Compétition d'Équipe - Le Meilleur Score Gagne!",
+                    teamName: "Nom de l'Équipe",
+                    playerName: "Nom du Joueur",
+                    startGame: "Commencer le Défi",
+                    instructions: "Instructions",
+                    rule1: "Vous verrez un MAUVAIS prompt et son résultat médiocre",
+                    rule2: "Votre but: réécrire le prompt pour obtenir un résultat SPÉCIFIQUE",
+                    rule3: "Vous avez 60 secondes et des tentatives illimitées",
+                    rule4: "Moins de tentatives + temps rapide = meilleur score",
+                    rule5: "Ne copiez pas l'objectif - écrivez un vrai prompt!",
+                    ready: "Prêt à Commencer",
+                    badPrompt: "❌ Mauvais Prompt:",
+                    poorResult: "😕 Résultat Médiocre:",
+                    yourGoal: "🎯 Votre Objectif:",
+                    showHint: "Voir l'Indice",
+                    hideHint: "Cacher l'Indice",
+                    hint: "💡 Indice:",
+                    yourPrompt: "Votre prompt amélioré:",
+                    submit: "Soumettre à Claude",
+                    submitting: "Claude réfléchit...",
+                    finish: "Terminer & Calculer le Score",
+                    timeLeft: "Temps",
+                    attempts: "Tentatives",
+                    aiResponse: "Réponse de Claude:",
+                    keepTrying: "Continuez! Essayez de mieux correspondre à l'objectif.",
+                    success: "✓ Ça a l'air bien! Vous pouvez terminer ou essayer d'améliorer.",
+                    antiCheat: "⚠️ Ne copiez pas l'objectif - écrivez un vrai prompt!",
+                    gameOver: "Défi Terminé!",
+                    team: "Équipe",
+                    player: "Joueur",
+                    scoreBreakdown: "Détail du Score",
+                    basePoints: "Points de Base",
+                    timeBonus: "Bonus Temps",
+                    qualityBonus: "Bonus Qualité",
+                    attemptPenalty: "Pénalité Tentatives",
+                    totalScore: "SCORE TOTAL",
+                    playAgain: "Rejouer",
+                    submittedPrompt: "Votre Prompt Gagnant:",
+                    enterBothNames: "Veuillez entrer les noms de l'équipe et du joueur",
+                    connectionError: "Erreur de connexion. Veuillez réessayer.",
+                    apiKeyMissing: "⚠️ Clé API non configurée. Veuillez ajouter votre clé API Anthropic."
+                }
+            };
 
+            const texts = t[language];
+            const currentChallenge = challenge[language];
+
+            // Timer
             useEffect(() => {
-                if (timeLeft > 0 && gameState === 'playing') {
-                    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-                    return () => clearTimeout(timer);
+                if (gameState === 'playing' && timeLeft > 0) {
+                    timerRef.current = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+                    return () => clearTimeout(timerRef.current);
                 } else if (timeLeft === 0 && gameState === 'playing') {
-                    setGameState('timeup');
+                    finishGame();
                 }
             }, [timeLeft, gameState]);
 
-            const calculateSimilarity = (str1, str2) => {
-                const s1 = str1.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const s2 = str2.toLowerCase().replace(/[^a-z0-9]/g, '');
-                
-                if (s2.includes(s1) || s1.includes(s2)) return 1;
-                
-                const words1 = str1.toLowerCase().split(/\s+/);
-                const words2 = str2.toLowerCase().split(/\s+/);
-                const commonWords = words1.filter(word => words2.includes(word) && word.length > 3);
-                
-                return commonWords.length / Math.max(words1.length, words2.length);
+            const startInstructions = () => {
+                if (!teamName.trim() || !playerName.trim()) {
+                    setError(texts.enterBothNames);
+                    return;
+                }
+                if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY === 'YOUR-API-KEY-HERE') {
+                    setError(texts.apiKeyMissing);
+                    return;
+                }
+                setError('');
+                setGameState('instructions');
             };
 
-            const evaluateResponse = (response, keywords) => {
-                const lowerResponse = response.toLowerCase();
-                
-                if (response.length < 100) return false;
-                
-                const matchedKeywords = keywords.filter(keyword => {
-                    const keywordLower = keyword.toLowerCase();
-                    return lowerResponse.includes(keywordLower) || 
-                           lowerResponse.includes(keywordLower.slice(0, -1)) ||
-                           (keywordLower.includes(' ') && keywordLower.split(' ').some(word => lowerResponse.includes(word)));
-                });
-                
-                return matchedKeywords.length >= Math.ceil(keywords.length * 0.4);
+            const startPlaying = () => {
+                setGameState('playing');
+                setTimeLeft(60);
             };
 
-            const testPrompt = async () => {
+            const checkAntiCheat = (prompt) => {
+                const goal = currentChallenge.goal.toLowerCase();
+                const userInput = prompt.toLowerCase();
+                const goalWords = goal.split(' ').filter(w => w.length > 4);
+                const matchCount = goalWords.filter(w => userInput.includes(w)).length;
+                return matchCount / goalWords.length > 0.6;
+            };
+
+            const evaluateResponse = (response) => {
+                const responseLower = response.toLowerCase();
+                const keywords = currentChallenge.targetKeywords;
+                const matched = keywords.filter(kw => responseLower.includes(kw.toLowerCase()));
+                const ratio = matched.length / keywords.length;
+                
+                if (ratio >= 0.8) return { quality: 'excellent', bonus: 20 };
+                if (ratio >= 0.6) return { quality: 'good', bonus: 10 };
+                if (ratio >= 0.4) return { quality: 'okay', bonus: 5 };
+                return { quality: 'poor', bonus: 0 };
+            };
+
+            const submitPrompt = async () => {
                 if (!userPrompt.trim() || isLoading) return;
-                
+
+                const isCopied = checkAntiCheat(userPrompt);
+                if (isCopied) {
+                    setError(texts.antiCheat);
+                    return;
+                }
+
                 setIsLoading(true);
-                setAttempts(attempts + 1);
-                
-                const similarity = calculateSimilarity(userPrompt, challenge.goal);
-                
-                if (similarity > 0.7) {
-                    setScore(Math.max(0, score - 5));
-                    setAiResponse(t.penaltyWarning);
-                    setIsLoading(false);
-                    return;
-                }
-                
-                if (userPrompt.length < 20) {
-                    setAiResponse(language === 'fr'
-                        ? "⚠️ Votre prompt est trop court. Soyez plus spécifique et détaillé!"
-                        : "⚠️ Your prompt is too short. Be more specific and detailed!");
-                    setIsLoading(false);
-                    return;
-                }
-                
+                setError('');
+                setAttempts(prev => prev + 1);
+
                 try {
                     const response = await fetch("https://api.anthropic.com/v1/messages", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "x-api-key": ANTHROPIC_API_KEY,
-                            "anthropic-version": "2023-06-01"
+                            "anthropic-version": "2023-06-01",
+                            "anthropic-dangerous-direct-browser-access": "true"
                         },
                         body: JSON.stringify({
                             model: "claude-sonnet-4-20250514",
-                            max_tokens: 1000,
+                            max_tokens: 1024,
                             messages: [
-                                { 
-                                    role: "user", 
-                                    content: language === 'fr' 
-                                        ? `Réponds en français: ${userPrompt}`
-                                        : userPrompt 
-                                }
-                            ],
+                                { role: "user", content: userPrompt }
+                            ]
                         })
                     });
 
                     const data = await response.json();
-                    const responseText = data.content
-                        .filter(item => item.type === "text")
-                        .map(item => item.text)
-                        .join("\n");
-                    
-                    setAiResponse(responseText);
-                    
-                    const isSuccess = evaluateResponse(responseText, challenge.targetKeywords);
-                    
-                    let pointsEarned;
-                    if (isSuccess) {
-                        pointsEarned = Math.max(10 - attempts, 3);
-                        setScore(score + pointsEarned);
-                    } else {
-                        pointsEarned = Math.max(5 - attempts, 1);
-                        setScore(score + pointsEarned);
+
+                    if (data.error) {
+                        setError(data.error.message || "API Error");
+                        setIsLoading(false);
+                        return;
                     }
-                    
-                    setGameState('success');
-                    
-                } catch (error) {
-                    setAiResponse(language === 'fr' 
-                        ? "Erreur lors de l'appel à l'API. Veuillez réessayer."
-                        : "Error calling API. Please try again.");
+
+                    const aiText = data.content
+                        .map(item => (item.type === "text" ? item.text : ""))
+                        .filter(Boolean)
+                        .join("\n");
+
+                    setAiResponse(aiText);
+
+                    const evaluation = evaluateResponse(aiText);
+                    if (evaluation.quality === 'excellent' || evaluation.quality === 'good') {
+                        setHasSucceeded(true);
+                    }
+                } catch (err) {
+                    setError(texts.connectionError);
+                    console.error(err);
                 }
-                
+
                 setIsLoading(false);
             };
 
-            const nextChallenge = () => {
-                if (currentChallenge < currentChallenges.length - 1) {
-                    setCurrentChallenge(currentChallenge + 1);
-                    setUserPrompt('');
-                    setAiResponse('');
-                    setGameState('playing');
-                    setTimeLeft(60);
-                    setAttempts(0);
-                    setShowHint(false);
-                } else {
-                    setGameState('finished');
+            const finishGame = () => {
+                clearTimeout(timerRef.current);
+                
+                const basePoints = 50;
+                const timeBonus = timeLeft;
+                
+                let qualityBonus = 0;
+                if (aiResponse) {
+                    const evaluation = evaluateResponse(aiResponse);
+                    qualityBonus = evaluation.bonus;
                 }
+                
+                const attemptPenalty = Math.max(0, (attempts - 1) * 5);
+                const total = Math.max(0, basePoints + timeBonus + qualityBonus - attemptPenalty);
+
+                setScoreBreakdown({
+                    base: basePoints,
+                    time: timeBonus,
+                    quality: qualityBonus,
+                    attemptPen: attemptPenalty,
+                    total: total
+                });
+                setFinalScore(total);
+                setGameState('finished');
             };
 
             const restartGame = () => {
-                setCurrentChallenge(0);
+                setTeamName('');
+                setPlayerName('');
                 setUserPrompt('');
                 setAiResponse('');
-                setGameState('instructions');
                 setTimeLeft(60);
-                setScore(0);
                 setAttempts(0);
                 setShowHint(false);
-                setShowInstructionsModal(false);
+                setFinalScore(0);
+                setScoreBreakdown(null);
+                setError('');
+                setHasSucceeded(false);
+                setGameState('setup');
             };
 
-            const startGame = () => {
-                setGameState('playing');
+            const getTimerColor = () => {
+                if (timeLeft > 30) return 'text-green-500';
+                if (timeLeft > 10) return 'text-yellow-500';
+                return 'text-red-500';
             };
 
-            if (gameState === 'finished') {
+            // Setup Screen
+            if (gameState === 'setup') {
                 return (
-                    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 p-8 flex items-center justify-center">
-                        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
-                            <Award className="w-20 h-20 text-yellow-500 mx-auto mb-4" />
-                            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t.finalScore}</h2>
-                            <p className="text-6xl font-bold text-purple-600 mb-8">{score}</p>
-                            <button
-                                onClick={restartGame}
-                                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:scale-105 transition-transform flex items-center gap-2 mx-auto"
-                            >
-                                <RefreshCw className="w-5 h-5" />
-                                {t.restart}
-                            </button>
-                        </div>
-                    </div>
-                );
-            }
+                    <div className="min-h-screen bg-gradient flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+                            <div className="text-center mb-8">
+                                <h1 className="text-3xl font-bold text-purple-800 mb-2">{texts.title}</h1>
+                                <p className="text-purple-600">{texts.subtitle}</p>
+                            </div>
 
-            if (gameState === 'instructions') {
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 p-4 md:p-8 flex items-center justify-center">
-                        <div className="max-w-3xl w-full bg-white rounded-2xl shadow-2xl p-8 md:p-12">
-                            <div className="flex justify-end mb-4">
+                            <div className="flex justify-center mb-6">
                                 <button
                                     onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-                                    className="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-2"
+                                    className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover-bg-purple-200 transition"
                                 >
-                                    <Languages className="w-5 h-5" />
-                                    {language === 'en' ? 'FR' : 'EN'}
+                                    🌐 {language === 'en' ? 'Français' : 'English'}
                                 </button>
                             </div>
-                            
-                            <div className="text-center mb-8">
-                                <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">{t.title}</h1>
-                                <p className="text-xl text-gray-600">{t.subtitle}</p>
-                            </div>
 
-                            <div className="space-y-6 mb-8">
+                            <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                        <span className="text-3xl">🎮</span> {t.howToPlay}
-                                    </h2>
-                                    <ol className="space-y-3">
-                                        {t.instructions.map((instruction, index) => (
-                                            <li key={index} className="flex gap-3">
-                                                <span className="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
-                                                    {index + 1}
-                                                </span>
-                                                <span className="text-gray-700 pt-1">{instruction}</span>
-                                            </li>
-                                        ))}
-                                    </ol>
+                                    <label className="block text-gray-700 font-medium mb-1">{texts.teamName}</label>
+                                    <input
+                                        type="text"
+                                        value={teamName}
+                                        onChange={(e) => setTeamName(e.target.value)}
+                                        className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg"
+                                        placeholder={language === 'en' ? "Enter team name..." : "Entrez le nom de l'équipe..."}
+                                    />
                                 </div>
-
-                                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
-                                    <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                        <span className="text-2xl">💡</span> {t.whatYouLearn}
-                                    </h3>
-                                    <ul className="space-y-2">
-                                        {t.learningPoints.map((point, index) => (
-                                            <li key={index} className="flex items-start gap-2 text-gray-700">
-                                                <span className="text-blue-600 mt-1">✓</span>
-                                                <span>{point}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
-                                    <h3 className="text-xl font-bold text-red-700 mb-2">{t.warningTitle}</h3>
-                                    <p className="text-gray-800">{t.warningText}</p>
+                                <div>
+                                    <label className="block text-gray-700 font-medium mb-1">{texts.playerName}</label>
+                                    <input
+                                        type="text"
+                                        value={playerName}
+                                        onChange={(e) => setPlayerName(e.target.value)}
+                                        className="w-full px-4 py-3 border-2 border-purple-200 rounded-lg"
+                                        placeholder={language === 'en' ? "Enter player name..." : "Entrez le nom du joueur..."}
+                                    />
                                 </div>
                             </div>
+
+                            {error && (
+                                <p className="mt-4 text-red-500 text-center">{error}</p>
+                            )}
 
                             <button
-                                onClick={startGame}
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-xl font-bold text-xl hover:scale-105 transition-transform shadow-lg"
+                                onClick={startInstructions}
+                                className="w-full mt-6 btn-primary"
                             >
-                                {t.startGame}
+                                {texts.startGame}
                             </button>
                         </div>
                     </div>
                 );
             }
 
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 p-4 md:p-8">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="text-center mb-8">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="flex-1"></div>
-                                <div className="flex-1 text-center">
-                                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">{t.title}</h1>
-                                    <p className="text-blue-100 text-lg">{t.subtitle}</p>
-                                </div>
-                                <div className="flex-1 flex justify-end">
-                                    <button
-                                        onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-                                        className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors flex items-center gap-2"
-                                    >
-                                        <Languages className="w-5 h-5" />
-                                        {language === 'en' ? 'FR' : 'EN'}
-                                    </button>
-                                </div>
+            // Instructions Screen
+            if (gameState === 'instructions') {
+                return (
+                    <div className="min-h-screen bg-gradient flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full">
+                            <h2 className="text-2xl font-bold text-purple-800 mb-6 text-center">{texts.instructions}</h2>
+                            
+                            <div className="space-y-3 mb-8">
+                                {[texts.rule1, texts.rule2, texts.rule3, texts.rule4, texts.rule5].map((rule, i) => (
+                                    <div key={i} className="flex items-start gap-3">
+                                        <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                            {i + 1}
+                                        </span>
+                                        <p className="text-gray-700">{rule}</p>
+                                    </div>
+                                ))}
                             </div>
 
-                            <div className="flex justify-center gap-6 text-white text-sm md:text-base flex-wrap">
-                                <button
-                                    onClick={() => setShowInstructionsModal(true)}
-                                    className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
-                                >
-                                    {t.showInstructions}
-                                </button>
-                                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                    <Clock className="w-5 h-5" />
-                                    <span className="font-semibold">{timeLeft}s</span>
-                                </div>
-                                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                    <span className="font-semibold">{t.challenge} {currentChallenge + 1} {t.of} {currentChallenges.length}</span>
-                                </div>
-                                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                    <span className="font-semibold">{t.score} {score}</span>
-                                </div>
-                                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                                    <span className="font-semibold">{t.attempts} {attempts}</span>
-                                </div>
+                            <div className="bg-purple-50 rounded-lg p-4 mb-6 text-center">
+                                <p className="text-purple-800 font-medium">{texts.team}: {teamName}</p>
+                                <p className="text-purple-600">{texts.player}: {playerName}</p>
                             </div>
+
+                            <button
+                                onClick={startPlaying}
+                                className="w-full bg-green-600 hover-bg-green text-white py-4 rounded-xl font-bold text-lg transition"
+                            >
+                                {texts.ready} →
+                            </button>
                         </div>
+                    </div>
+                );
+            }
 
-                        {showInstructionsModal && (
-                            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowInstructionsModal(false)}>
-                                <div className="bg-white rounded-xl p-6 max-w-2xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">{t.howToPlay}</h2>
-                                    <ol className="space-y-3 mb-6">
-                                        {t.instructions.map((instruction, index) => (
-                                            <li key={index} className="flex gap-3">
-                                                <span className="flex-shrink-0 w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                                                    {index + 1}
-                                                </span>
-                                                <span className="text-gray-700 pt-0.5">{instruction}</span>
-                                            </li>
-                                        ))}
-                                    </ol>
+            // Playing Screen
+            if (gameState === 'playing') {
+                return (
+                    <div className="min-h-screen bg-gradient p-4">
+                        <div className="max-w-4xl mx-auto">
+                            {/* Header */}
+                            <div className="bg-white rounded-xl p-4 mb-4 flex justify-between items-center">
+                                <div>
+                                    <span className="font-bold text-purple-800">{teamName}</span>
+                                    <span className="text-gray-500 mx-2">•</span>
+                                    <span className="text-gray-600">{playerName}</span>
+                                </div>
+                                <div className={`text-4xl font-mono font-bold ${getTimerColor()}`}>
+                                    {timeLeft}s
+                                </div>
+                                <div className="text-gray-600">
+                                    {texts.attempts}: <span className="font-bold">{attempts}</span>
+                                </div>
+                            </div>
+
+                            {/* Challenge Card */}
+                            <div className="bg-white rounded-xl p-6 mb-4 space-y-4">
+                                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                                    <p className="font-bold text-red-700">{texts.badPrompt}</p>
+                                    <p className="text-gray-700 italic mt-1">"{currentChallenge.badPrompt}"</p>
+                                </div>
+
+                                <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
+                                    <p className="font-bold text-orange-700">{texts.poorResult}</p>
+                                    <p className="text-gray-700 mt-1">{currentChallenge.poorResult}</p>
+                                </div>
+
+                                <div className="bg-green-100 border-l-4 border-green-500 p-4 rounded">
+                                    <p className="font-bold text-green-700">{texts.yourGoal}</p>
+                                    <p className="text-gray-800 font-medium mt-1">{currentChallenge.goal}</p>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowHint(!showHint)}
+                                    className="text-blue-600 font-medium cursor-pointer"
+                                >
+                                    {showHint ? texts.hideHint : texts.showHint}
+                                </button>
+
+                                {showHint && (
+                                    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                                        <p className="font-bold text-blue-700">{texts.hint}</p>
+                                        <p className="text-gray-700 mt-1">{currentChallenge.hint}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Input Area */}
+                            <div className="bg-white rounded-xl p-6 mb-4">
+                                <label className="block font-bold text-purple-800 mb-2">{texts.yourPrompt}</label>
+                                <textarea
+                                    value={userPrompt}
+                                    onChange={(e) => setUserPrompt(e.target.value)}
+                                    className="w-full h-32 p-4 border-2 border-purple-200 rounded-lg resize-none"
+                                    placeholder={language === 'en' ? "Write your improved prompt here..." : "Écrivez votre prompt amélioré ici..."}
+                                    disabled={isLoading}
+                                />
+
+                                {error && (
+                                    <div className="mt-2 p-3 bg-red-100 border border-red-400 rounded-lg text-red-700">
+                                        {error}
+                                    </div>
+                                )}
+
+                                <div className="flex gap-4 mt-4">
                                     <button
-                                        onClick={() => setShowInstructionsModal(false)}
-                                        className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                                        onClick={submitPrompt}
+                                        disabled={isLoading || !userPrompt.trim()}
+                                        className="flex-1 btn-secondary"
                                     >
-                                        {t.backToGame}
+                                        {isLoading ? texts.submitting : texts.submit}
+                                    </button>
+                                    <button
+                                        onClick={finishGame}
+                                        disabled={attempts === 0}
+                                        className="px-6 btn-green"
+                                    >
+                                        {texts.finish}
                                     </button>
                                 </div>
                             </div>
-                        )}
 
-                        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 space-y-6">
-                            {gameState === 'playing' && (
-                                <>
-                                    <div className="space-y-4">
-                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-red-700 mb-1">{t.badPromptLabel}</p>
-                                            <p className="text-gray-700 italic">"{challenge.badPrompt}"</p>
-                                        </div>
-
-                                        <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-orange-700 mb-1">{t.poorResultLabel}</p>
-                                            <p className="text-gray-700">{challenge.poorResult}</p>
-                                        </div>
-
-                                        <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-green-700 mb-2">{t.yourGoalLabel}</p>
-                                            <p className="text-gray-800 font-medium">{challenge.goal}</p>
-                                        </div>
+                            {/* AI Response */}
+                            {aiResponse && (
+                                <div className="bg-white rounded-xl p-6">
+                                    <p className="font-bold text-purple-800 mb-2">{texts.aiResponse}</p>
+                                    <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto whitespace-pre-wrap text-gray-700">
+                                        {aiResponse}
                                     </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-2">{t.yourPromptLabel}</label>
-                                        <textarea
-                                            value={userPrompt}
-                                            onChange={(e) => setUserPrompt(e.target.value)}
-                                            placeholder={t.promptPlaceholder}
-                                            className="w-full h-32 p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none"
-                                            disabled={isLoading}
-                                        />
-                                    </div>
-
-                                    <div className="flex gap-4">
-                                        <button
-                                            onClick={testPrompt}
-                                            disabled={isLoading || !userPrompt.trim()}
-                                            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            {isLoading ? t.testing : t.submitButton}
-                                        </button>
-                                        <button
-                                            onClick={() => setShowHint(!showHint)}
-                                            className="bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colors"
-                                        >
-                                            {t.hintButton}
-                                        </button>
-                                    </div>
-
-                                    {showHint && (
-                                        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-yellow-700 mb-1">{t.hint}</p>
-                                            <p className="text-gray-700">{challenge.hint}</p>
-                                        </div>
-                                    )}
-
-                                    {aiResponse && (
-                                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-blue-700 mb-2">{t.aiResponse}</p>
-                                            <p className="text-gray-700 whitespace-pre-wrap">{aiResponse}</p>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-
-                            {gameState === 'success' && (
-                                <div className="space-y-6">
-                                    {aiResponse && (
-                                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                                            <p className="text-sm font-semibold text-blue-700 mb-2">{t.aiResponse}</p>
-                                            <p className="text-gray-700 whitespace-pre-wrap">{aiResponse}</p>
-                                        </div>
-                                    )}
-                                    
-                                    <div className="text-center py-6">
-                                        <div className="text-6xl mb-4">🎉</div>
-                                        <h2 className="text-3xl font-bold text-green-600 mb-4">{t.success}</h2>
-                                        <p className="text-gray-700 mb-6">{t.successMessage}</p>
-                                        <p className="text-lg mb-6">
-                                            <span className="font-semibold">{t.score}</span> <span className="text-2xl text-purple-600 font-bold">+{Math.max(10 - attempts + 1, 1)}</span>
-                                        </p>
-                                        <button
-                                            onClick={nextChallenge}
-                                            className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:scale-105 transition-transform"
-                                        >
-                                            {t.nextChallenge}
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {gameState === 'timeup' && (
-                                <div className="text-center py-8">
-                                    <div className="text-6xl mb-4">⏰</div>
-                                    <h2 className="text-3xl font-bold text-orange-600 mb-4">{t.timeUp}</h2>
-                                    <p className="text-gray-700 mb-6">{t.timeUpMessage}</p>
-                                    {currentChallenge < currentChallenges.length - 1 ? (
-                                        <button
-                                            onClick={nextChallenge}
-                                            className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:scale-105 transition-transform"
-                                        >
-                                            {t.nextChallenge}
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={() => setGameState('finished')}
-                                            className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:scale-105 transition-transform"
-                                        >
-                                            {t.finalScore}
-                                        </button>
-                                    )}
+                                    <p className={`mt-3 font-medium ${hasSucceeded ? 'text-green-600' : 'text-yellow-600'}`}>
+                                        {hasSucceeded ? texts.success : texts.keepTrying}
+                                    </p>
                                 </div>
                             )}
                         </div>
                     </div>
-                </div>
-            );
+                );
+            }
+
+            // Finished Screen
+            if (gameState === 'finished') {
+                return (
+                    <div className="min-h-screen bg-gradient flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+                            <div className="text-6xl mb-4">🏆</div>
+                            <h2 className="text-2xl font-bold text-purple-800 mb-2">{texts.gameOver}</h2>
+                            
+                            <div className="bg-purple-50 rounded-lg p-4 mb-6">
+                                <p className="text-purple-800 font-medium">{texts.team}: {teamName}</p>
+                                <p className="text-purple-600">{texts.player}: {playerName}</p>
+                            </div>
+
+                            <div className="text-6xl font-bold text-purple-600 mb-6">
+                                {finalScore}
+                            </div>
+
+                            {scoreBreakdown && (
+                                <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                                    <h3 className="font-bold text-gray-800 mb-3 text-center">{texts.scoreBreakdown}</h3>
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">{texts.basePoints}</span>
+                                            <span className="font-medium">+{scoreBreakdown.base}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">{texts.timeBonus} ({scoreBreakdown.time}s)</span>
+                                            <span className="font-medium text-green-600">+{scoreBreakdown.time}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">{texts.qualityBonus}</span>
+                                            <span className="font-medium text-blue-600">+{scoreBreakdown.quality}</span>
+                                        </div>
+                                        {scoreBreakdown.attemptPen > 0 && (
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">{texts.attemptPenalty}</span>
+                                                <span className="font-medium text-red-600">-{scoreBreakdown.attemptPen}</span>
+                                            </div>
+                                        )}
+                                        <div className="border-t-2 border-gray-300 pt-2 mt-2 flex justify-between text-lg">
+                                            <span className="font-bold">{texts.totalScore}</span>
+                                            <span className="font-bold text-purple-600">{scoreBreakdown.total}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {userPrompt && (
+                                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded text-left mb-6">
+                                    <p className="text-sm font-bold text-blue-700 mb-1">{texts.submittedPrompt}</p>
+                                    <p className="text-gray-700 italic">"{userPrompt}"</p>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={restartGame}
+                                className="w-full btn-primary"
+                            >
+                                {texts.playAgain}
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return null;
         };
 
-        ReactDOM.render(<PromptRepairGame />, document.getElementById('root'));
+        ReactDOM.render(<TeamPromptChallenge />, document.getElementById('root'));
     </script>
 </body>
 </html>
