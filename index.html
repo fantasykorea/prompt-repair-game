@@ -216,22 +216,23 @@
             const [scoreBreakdown, setScoreBreakdown] = useState(null);
             const [error, setError] = useState('');
             const [hasSucceeded, setHasSucceeded] = useState(false);
+            const [isFactual, setIsFactual] = useState(true);
             const timerRef = useRef(null);
 
             const challenge = {
                 en: {
                     badPrompt: "Tell me about dogs",
                     poorResult: "Dogs are mammals that bark and are kept as pets. They come in many breeds.",
-                    goal: "Get a comparison of 3 dog breeds suitable for apartment living, with pros and cons for each",
+                    goal: "Get a comparison of 3 REAL dog breeds suitable for apartment living, with FACTUAL pros and cons for each",
                     targetKeywords: ["breed", "apartment", "pros", "cons", "comparison", "living"],
-                    hint: "Be specific about: (1) what you want compared, (2) the context (apartment living), (3) the format (pros/cons), (4) how many breeds"
+                    hint: "Be specific about: (1) what you want compared, (2) the context (apartment living), (3) the format (pros/cons), (4) how many REAL breeds"
                 },
                 fr: {
                     badPrompt: "Parle-moi des chiens",
                     poorResult: "Les chiens sont des mammifères qui aboient et sont gardés comme animaux de compagnie. Il existe de nombreuses races.",
-                    goal: "Obtenir une comparaison de 3 races de chiens adaptées à la vie en appartement, avec avantages et inconvénients pour chacune",
+                    goal: "Obtenir une comparaison de 3 races de chiens RÉELLES adaptées à la vie en appartement, avec avantages et inconvénients FACTUELS pour chacune",
                     targetKeywords: ["race", "appartement", "avantage", "inconvénient", "comparaison", "vie"],
-                    hint: "Soyez précis sur: (1) ce que vous voulez comparer, (2) le contexte (vie en appartement), (3) le format (avantages/inconvénients), (4) combien de races"
+                    hint: "Soyez précis sur: (1) ce que vous voulez comparer, (2) le contexte (vie en appartement), (3) le format (avantages/inconvénients), (4) combien de races RÉELLES"
                 }
             };
 
@@ -273,6 +274,7 @@
                     timeBonus: "Time Bonus",
                     qualityBonus: "Quality Bonus",
                     attemptPenalty: "Attempt Penalty",
+                    factualPenalty: "Factual Penalty (not real breeds)",
                     totalScore: "TOTAL SCORE",
                     playAgain: "Play Again",
                     submittedPrompt: "Your Winning Prompt:",
@@ -317,6 +319,7 @@
                     timeBonus: "Bonus Temps",
                     qualityBonus: "Bonus Qualité",
                     attemptPenalty: "Pénalité Tentatives",
+                    factualPenalty: "Pénalité Factuelle (races non réelles)",
                     totalScore: "SCORE TOTAL",
                     playAgain: "Rejouer",
                     submittedPrompt: "Votre Prompt Gagnant:",
@@ -377,6 +380,58 @@
                 return { quality: 'poor', bonus: 0 };
             };
 
+            const validateFactualAccuracy = async (response) => {
+                try {
+                    const validationPrompt = language === 'en' 
+                        ? `Review this response about dog breeds. Are ALL the dog breeds mentioned REAL, recognized breeds (not fictional or made-up)? Answer only "YES" if all breeds are real, or "NO" if any breed is fictional or made-up.
+
+Response to check:
+${response}
+
+Answer (YES or NO):`
+                        : `Examinez cette réponse sur les races de chiens. Est-ce que TOUTES les races de chiens mentionnées sont RÉELLES et reconnues (pas fictives ou inventées)? Répondez uniquement "OUI" si toutes les races sont réelles, ou "NON" si une race est fictive ou inventée.
+
+Réponse à vérifier:
+${response}
+
+Réponse (OUI ou NON):`;
+
+                    const validationResponse = await fetch("https://api.anthropic.com/v1/messages", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-api-key": ANTHROPIC_API_KEY,
+                            "anthropic-version": "2023-06-01",
+                            "anthropic-dangerous-direct-browser-access": "true"
+                        },
+                        body: JSON.stringify({
+                            model: "claude-sonnet-4-20250514",
+                            max_tokens: 50,
+                            messages: [
+                                { role: "user", content: validationPrompt }
+                            ]
+                        })
+                    });
+
+                    const data = await validationResponse.json();
+                    
+                    if (data.error) {
+                        return true; // Default to factual if validation fails
+                    }
+
+                    const answer = data.content
+                        .map(item => (item.type === "text" ? item.text : ""))
+                        .filter(Boolean)
+                        .join("")
+                        .toUpperCase();
+
+                    return answer.includes("YES") || answer.includes("OUI");
+                } catch (err) {
+                    console.error("Validation error:", err);
+                    return true; // Default to factual if validation fails
+                }
+            };
+
             const submitPrompt = async () => {
                 if (!userPrompt.trim() || isLoading) return;
 
@@ -400,7 +455,7 @@
                             "anthropic-dangerous-direct-browser-access": "true"
                         },
                         body: JSON.stringify({
-                            model: "claude-sonnet-4-5-20250929",
+                            model: "claude-sonnet-4-20250514",
                             max_tokens: 1024,
                             messages: [
                                 { role: "user", content: userPrompt }
@@ -422,6 +477,10 @@
                         .join("\n");
 
                     setAiResponse(aiText);
+
+                    // Validate factual accuracy
+                    const factualResult = await validateFactualAccuracy(aiText);
+                    setIsFactual(factualResult);
 
                     const evaluation = evaluateResponse(aiText);
                     if (evaluation.quality === 'excellent' || evaluation.quality === 'good') {
@@ -448,13 +507,15 @@
                 }
                 
                 const attemptPenalty = Math.max(0, (attempts - 1) * 5);
-                const total = Math.max(0, basePoints + timeBonus + qualityBonus - attemptPenalty);
+                const factualPenalty = isFactual ? 0 : 15;
+                const total = Math.max(0, basePoints + timeBonus + qualityBonus - attemptPenalty - factualPenalty);
 
                 setScoreBreakdown({
                     base: basePoints,
                     time: timeBonus,
                     quality: qualityBonus,
                     attemptPen: attemptPenalty,
+                    factualPen: factualPenalty,
                     total: total
                 });
                 setFinalScore(total);
@@ -473,6 +534,7 @@
                 setScoreBreakdown(null);
                 setError('');
                 setHasSucceeded(false);
+                setIsFactual(true);
                 setGameState('setup');
             };
 
@@ -714,6 +776,12 @@
                                             <div className="flex justify-between">
                                                 <span className="text-gray-600">{texts.attemptPenalty}</span>
                                                 <span className="font-medium text-red-600">-{scoreBreakdown.attemptPen}</span>
+                                            </div>
+                                        )}
+                                        {scoreBreakdown.factualPen > 0 && (
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">{texts.factualPenalty}</span>
+                                                <span className="font-medium text-red-600">-{scoreBreakdown.factualPen}</span>
                                             </div>
                                         )}
                                         <div className="border-t-2 border-gray-300 pt-2 mt-2 flex justify-between text-lg">
